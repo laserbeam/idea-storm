@@ -4,43 +4,72 @@ import json
 
 
 class Idea(EventDispatcher):
+    '''A single idea, inside a massive storm.'''
     id_count = 0
-    key_id = NumericProperty(0)
+    storm = ObjectProperty(None)
+    key = NumericProperty(0)
     title = StringProperty('')
-    color = ObjectProperty(None)
+    color = ListProperty([0, 0, 0, 1])
     description = StringProperty('')
     x = NumericProperty(0)
     y = NumericProperty(0)
     pos = ReferenceListProperty(x, y)
+    scale = NumericProperty(1)
     children = ListProperty()
-    parent_idea = NumericProperty(-1)
+    parent = ObjectProperty(None)
 
-    def __init__(self, **kwargs):
+    def __init__(self, storm=None, key=None, **kwargs):
         super(Idea, self).__init__(**kwargs)
-        self.key_id = Idea.id_count + 1
-        Idea.id_count = Idea.id_count + 1
+        self.storm = storm
+        if key is not None:
+            self.key = key
+        else:
+            self.key = Idea.id_count + 1
+            Idea.id_count = Idea.id_count + 1
+        self.title = kwargs.get('title', '')
+        self.description = kwargs.get('description', '')
+        self.color = kwargs.get('color', [0, 0, 0, 1])
 
     def add_child(self, idea):
-        children.append(idea)
-        idea.parent_idea = self
+        if idea.parent:
+            idea.parent.remove_child(idea)
+        self.children.append(idea)
+        idea.parent
 
     def remove_child(self, idea):
-        children.remove(idea)
-        idea.parent_idea = -1
+        self.children.remove(idea)
+        idea.parent = None
 
-    def as_json(self):
+    def as_dict(self):
         parent_num = -1
-        if self.parent_idea:
-            parent_num = self.parent_num.key_id
-        return json.dumps({
-            'id': self.key_id,
+        if self.parent:
+            parent_num = self.parent.key
+        return {
+            'id': self.key,
             'title': self.title,
             'color': self.color,
             'desc': self.description,
             'x': self.x,
             'y': self.y,
+            'scale': self.scale,
             'parent': parent_num
-        })
+        }
+
+    @staticmethod
+    def from_dict(obj):
+        idea = Idea(obj['id'])
+        idea.title = obj['title']
+        idea.color = obj['color']
+        idea.desc = obj['desc']
+        idea.x = obj['x']
+        idea.y = obj['y']
+        idea.scale = obj['scale']
+        return idea
+
+    @staticmethod
+    def from_json(string):
+        obj = json.loads(string)
+        return Idea.from_dict(obj)
 
 
 class IdeaWidgetBehaviour(object):
@@ -84,9 +113,11 @@ class IdeaWidgetBehaviour(object):
             desc = self.description_widget
         if idea:
             if title:
+                title.text = idea.title
                 idea.bind(title=title.setter('text'))
                 title.bind(text=idea.setter('title'))
             if desc:
+                desc.text = idea.description
                 idea.bind(description=desc.setter('text'))
                 desc.bind(text=idea.setter('description'))
 

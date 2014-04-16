@@ -1,31 +1,46 @@
 # Author: Catalin Balan
-<BoardView>:
-    RelativeLayout:
-        canvas:
+<BoardScreen>:
+    BoxLayout:
+        canvas.before:
             Color:
                 rgba: 0.9, 0.9, 0.9, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
-        BoardViewIdea:
-            pos: 200, 650
-        BoardViewIdea:
-            pos: 200, 550
-            text: 'foo'
-        BoardViewIdea:
-            pos: 200, 450
-            text: 'longer text here'
-        BoardViewIdea:
-            pos: 200, 300
-            text: 'very long text which should span across several lines without problems'
-        BoardViewIdea:
-            pos: 200, 100
-            text: 'dfgskdfhgjskerugbsliehgjkfdhbgyuserbgljkshdfgiusfgjssdfg text containing a very very long word, longer than the maximum length of the widget'
+        orientation: 'vertical'
+        BoxLayout:
+            id: toolbar
+            size_hint_y: None
+            height: '48dp'
+            orientation: 'horizontal'
+            canvas.before:
+                Color:
+                    rgba: 0.3, 0.3, 0.3, 1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            Button:
+                text: 'New Idea'
+                on_release: board.add_idea()
+        RelativeLayout:
+            IdeaBoard:
+                toolbar: toolbar
+                id: board
 
+<IdeaBoard>:
+    background: background
+    # size_hint: None, None
+    do_collide_after_children: True
+    auto_bring_to_front: False
+    IdeaBoardBackground:
+        pos: 0, 0
+        size: 2000, 2000
+        id: background
+        storm_widgets: root.storm_widgets
 
 <BoardViewIdea>:
     size_hint: None, None
-    size: title_widget.size[0] + 40, title_widget.size[1]+40
+    size: title_widget.size[0] + 40, title_widget.size[1] + 40
     title_widget: title_widget
     RoundedRectangle:
         size: self.parent.size
@@ -41,4 +56,3 @@
         text: root.text
         pos: 20, 20
         halign: 'center'
-

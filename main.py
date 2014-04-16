@@ -5,7 +5,7 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, FadeTransition
 from kivy.config import Config
 from kivy.properties import *
-from boardview import BoardView
+from boardview import BoardScreen
 import shapes
 import resizingtextinput
 
@@ -18,7 +18,7 @@ class IdeaStormApp(App):
 
     def build(self):
         sm = ScreenManager(transition=FadeTransition(duration=.1))
-        sm.add_widget(BoardView(name='boardview'))
+        sm.add_widget(BoardScreen(name='boardview'))
         return sm
 
 if __name__ == '__main__':
