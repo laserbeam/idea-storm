@@ -16,7 +16,9 @@ class ResizingTextInput(TextInput):
         self.bind(text=self._schedule_widget_resize,
                   line_height=self._schedule_widget_resize,
                   line_spacing=self._schedule_widget_resize,
-                  padding=self._schedule_widget_resize)
+                  padding=self._schedule_widget_resize,
+                  min_width=self._schedule_widget_resize,
+                  max_width=self._schedule_widget_resize)
         Clock.schedule_once(self._first_resize, -1)
         self._line_offsets = []
 
@@ -83,6 +85,7 @@ class ResizingTextInput(TextInput):
             offset = self._get_text_width(
                 _lines[row][:col], self.tab_width,
                 self._label_cached)
+        # CHANGE MADE HERE!
         if len(self._line_offsets) > self.cursor_row:
             offset = offset + self._line_offsets[self.cursor_row]
         return offset
@@ -100,6 +103,7 @@ class ResizingTextInput(TextInput):
         scrl_y = scrl_y / dy if scrl_y > 0 else 0
         cy = (self.top - padding_top + scrl_y * dy) - y
         cy = int(boundary(round(cy / dy - 0.5), 0, len(l) - 1))
+        # CHANGE MADE HERE!
         cx = cx - self._line_offsets[cy]
         dcx = 0
         _get_text_width = self._get_text_width
@@ -115,7 +119,7 @@ class ResizingTextInput(TextInput):
         return cx, cy
 
     def _update_graphics(self, *largs):
-# Update all the graphics according to the current internal values.
+        # Update all the graphics according to the current internal values.
         #
         # This is a little bit complex, cause we have to :
         #     - handle scroll_x
@@ -205,12 +209,12 @@ class ResizingTextInput(TextInput):
                     tcx,
                     tcy)
 
+                # CHANGE MADE HERE!
                 offset = 0
                 if self.halign == 'center':
                     offset = (max_line_width - size[0])/2
                 elif self.halign == 'right':
                     offset = max_line_width - size[0]
-                print size[0], offset
                 self._line_offsets[line_num] = offset
                 # add rectangle.
                 r = rects[line_num]
@@ -223,6 +227,7 @@ class ResizingTextInput(TextInput):
             y -= dy
 
         self._update_graphics_selection()
+        # CHANGE MADE HERE!
         self._schedule_widget_resize()
 
     def _schedule_widget_resize(self, *arg):
@@ -243,6 +248,5 @@ class ResizingTextInput(TextInput):
             w = 0
         self.width = max(w, self.min_width)
         self.cursor = self.get_cursor_from_index(self.cursor_index())
-        # print 'post_trigger', self.cursor_index()
 
 Factory.register('ResizingTextInput', cls=ResizingTextInput)
