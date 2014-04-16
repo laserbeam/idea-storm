@@ -1,0 +1,44 @@
+# Author: Catalin Balan
+<BoardView>:
+    RelativeLayout:
+        canvas:
+            Color:
+                rgba: 0.9, 0.9, 0.9, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        BoardViewIdea:
+            pos: 200, 650
+        BoardViewIdea:
+            pos: 200, 550
+            text: 'foo'
+        BoardViewIdea:
+            pos: 200, 450
+            text: 'longer text here'
+        BoardViewIdea:
+            pos: 200, 300
+            text: 'very long text which should span across several lines without problems'
+        BoardViewIdea:
+            pos: 200, 100
+            text: 'dfgskdfhgjskerugbsliehgjkfdhbgyuserbgljkshdfgiusfgjssdfg text containing a very very long word, longer than the maximum length of the widget'
+
+
+<BoardViewIdea>:
+    size_hint: None, None
+    size: title_widget.size[0] + 40, title_widget.size[1]+40
+    title_widget: title_widget
+    RoundedRectangle:
+        size: self.parent.size
+    ResizingTextInput:
+        padding: 0, 0, 0, 0
+        id: title_widget
+        background_active: ''
+        background_normal: ''
+        background_disabled_active: ''
+        background_disabled_normal: ''
+        size: 300, 48
+        font_size: '24dp'
+        text: root.text
+        pos: 20, 20
+        halign: 'center'
+
