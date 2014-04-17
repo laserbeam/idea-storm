@@ -15,8 +15,7 @@ class Storm(EventDispatcher):
             self.max_key = self.max_key + 1
             idea = Idea(self, self.max_key, **kwargs)
         self.ideas[idea.key] = idea
-        self.max_key = max(self.max_key, idea.key + 1)
-        print parent, self.ideas
+        self.max_key = max(self.max_key, idea.key)
         if parent:
             if not isinstance(parent, Idea):
                 parent = self.get_idea(parent)
@@ -35,6 +34,8 @@ class Storm(EventDispatcher):
             key = key.key
         return key in self.ideas
 
+    # root_idea = AliasProperty()
+
     def get_idea(self, key):
         if isinstance(key, Idea):
             return key
@@ -44,8 +45,11 @@ class Storm(EventDispatcher):
         return json.dumps({
             'type': 'storm',
             'name': self.name,
-            'ideas': [idea.as_dict() for idea in self.ideas],
+            'ideas': [idea.as_dict() for idea in self.ideas.values()],
         })
+
+    def on_ideas(self, *args):
+        print 'IDEAS!'
 
     @staticmethod
     def from_json(self, string):

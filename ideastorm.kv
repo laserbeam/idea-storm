@@ -21,28 +21,51 @@
                     size: self.size
             Button:
                 text: 'New Idea'
-                on_release: board.add_idea()
-        RelativeLayout:
+                on_release: board.add_idea_to_selected()
+            Button:
+                text: 'Save'
+                on_release: print(board.storm.as_json())
+            Button:
+                text: 'Zoom'
+                on_release: board.zoom_to_widget()
+            Button:
+                size_hint: None, 1
+                width: '48dp'
+                Image:
+                    size_hint: None, None
+                    source: 'assets/appbar.settings.png'
+                    size: self.parent.size
+                    pos: self.parent.pos
+        StencilView:
             IdeaBoard:
+                size_hint: 1, 1
                 toolbar: toolbar
                 id: board
 
 <IdeaBoard>:
     background: background
-    # size_hint: None, None
+    size: self.parent.size
     do_collide_after_children: True
     auto_bring_to_front: False
     IdeaBoardBackground:
         pos: 0, 0
-        size: 2000, 2000
         id: background
         storm_widgets: root.storm_widgets
+        canvas.before:
+            # Color:
+            #     rgba: 1, 0.3, 0.3, 0.4
+            # Rectangle:
+            #     pos: self.pos
+            #     size: self.size
 
 <BoardViewIdea>:
     size_hint: None, None
     size: title_widget.size[0] + 40, title_widget.size[1] + 40
     title_widget: title_widget
+    on_touch_down: root.on_selected()
+    do_rotation: False
     RoundedRectangle:
+        id: bg
         size: self.parent.size
     ResizingTextInput:
         padding: 0, 0, 0, 0
@@ -51,6 +74,7 @@
         background_normal: ''
         background_disabled_active: ''
         background_disabled_normal: ''
+        background_color: 0, 0, 0, 0
         size: 300, 48
         font_size: '24dp'
         text: root.text

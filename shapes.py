@@ -35,21 +35,30 @@ class RoundedRectangle(Widget):
         self.canvas.clear()
         with self.canvas:
             Color(*self.background_color)
-            Ellipse(pos=[x, y], size=[2*r, 2*r])
-            Ellipse(pos=[xx-2*r, y], size=[2*r, 2*r])
-            Ellipse(pos=[x, yy-2*r], size=[2*r, 2*r])
-            Ellipse(pos=[xx-2*r, yy-2*r], size=[2*r, 2*r])
+            Ellipse(pos=[x, y], size=[2*r, 2*r],
+                    angle_start=180, angle_end=270)
+            Ellipse(pos=[xx-2*r, y], size=[2*r, 2*r],
+                    angle_start=90, angle_end=180)
+            Ellipse(pos=[x, yy-2*r], size=[2*r, 2*r],
+                    angle_start=270, angle_end=360)
+            Ellipse(pos=[xx-2*r, yy-2*r], size=[2*r, 2*r],
+                    angle_start=0, angle_end=90)
             Rectangle(pos=[x+r, y], size=[w-2*r, h])
-            Rectangle(pos=[x, y+r], size=[w, h-2*r])
+            Rectangle(pos=[x, y+r], size=[r, h-2*r])
+            Rectangle(pos=[xx-r, y+r], size=[r, h-2*r])
             Color(*self.line_color)
-            Line(width=t, points=(x, y+r, x, yy-r))
-            Line(width=t, points=(xx, y+r, xx, yy-r))
-            Line(width=t, points=(x+r, y, xx-r, y))
-            Line(width=t, points=(x+r, yy, xx-r, yy))
-            Line(width=t, bezier=(x, y+r, x, y+p, x+p, y, x+r, y))
-            Line(width=t, bezier=(x, yy-r, x, yy-p, x+p, yy, x+r, yy))
-            Line(width=t, bezier=(xx, y+r, xx, y+p, xx-p, y, xx-r, y))
-            Line(width=t, bezier=(xx, yy-r, xx, yy-p, xx-p, yy, xx-r, yy))
+            Line(width=t, cap='none', points=(x, y+r, x, yy-r))
+            Line(width=t, cap='none', points=(xx, y+r, xx, yy-r))
+            Line(width=t, cap='none', points=(x+r, y, xx-r, y))
+            Line(width=t, cap='none', points=(x+r, yy, xx-r, yy))
+            Line(width=t, cap='none', bezier=(x, y+r, x, y+p, x+p, y, x+r, y))
+            Line(width=t, cap='none',
+                 bezier=(x, yy-r, x, yy-p, x+p, yy, x+r, yy))
+            Line(width=t, cap='none',
+                 bezier=(xx, y+r, xx, y+p, xx-p, y, xx-r, y))
+            Line(width=t, cap='none',
+                 bezier=(xx, yy-r, xx, yy-p, xx-p, yy, xx-r, yy))
+        self.canvas.ask_update()
 
     def on_size(self, *arg):
         if self.radius > self.width/2. or self.radius > self.height/2.:

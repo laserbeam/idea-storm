@@ -34,7 +34,7 @@ class Idea(EventDispatcher):
         if idea.parent:
             idea.parent.remove_child(idea)
         self.children.append(idea)
-        idea.parent
+        idea.parent = self
 
     def remove_child(self, idea):
         self.children.remove(idea)

@@ -8,6 +8,7 @@ from kivy.properties import *
 from boardview import BoardScreen
 import shapes
 import resizingtextinput
+import otherwidgets
 
 Config.set('graphics', 'width', '1024')
 Config.set('graphics', 'height', '768')
